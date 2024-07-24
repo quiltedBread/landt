@@ -1,30 +1,28 @@
+import { useState } from "react";
 import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
+import { PresetColors } from "antd/es/theme/internal";
 
 import { Position as PositionProps } from "../types";
 import { Bullet as BulletProps } from "../types";
 
-// type TableRowSelection<T> = TableProps<T>["rowSelection"];
+type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
 const columns: TableProps<BulletProps>["columns"] = [
     {
         title: "Text",
         dataIndex: "text",
-        key: "text",
     },
     {
         title: "Tags",
-        key: "tags",
         dataIndex: "tags",
         render: (_, { tags }) => (
             <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? "geekblue" : "green";
-                    if (tag === "loser") {
-                        color = "volcano";
-                    }
+                {tags.map((tag, i) => {
+                    // TODO create hash func for colors so tags with same text are same color
+                    const tagColor = PresetColors[Math.floor(Math.random()*PresetColors.length)]
                     return (
-                        <Tag color={color} key={tag}>
+                        <Tag color={tagColor} key={i}>
                             {tag.toUpperCase()}
                         </Tag>
                     );
@@ -34,12 +32,18 @@ const columns: TableProps<BulletProps>["columns"] = [
     },
 ];
 
-// const rowSelection: TableRowSelection<BulletProps> = {
-//     selectedRowKeys,
-//     onChange: onSelectChange,
-// };
-
 export default function Position({ props }: { props: PositionProps }) {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        // TODO remove local state and update global state
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+    // Define row selection config
+    const rowSelection: TableRowSelection<BulletProps> = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
     return (
         <div className="position">
             <h2>{props.title}</h2>
@@ -48,7 +52,7 @@ export default function Position({ props }: { props: PositionProps }) {
                 dataSource={props.bullets}
                 pagination={false}
                 showHeader={false}
-                // rowSelection={}
+                rowSelection={rowSelection}
             />
         </div>
     );

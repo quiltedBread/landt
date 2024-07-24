@@ -24,7 +24,7 @@ function App() {
             <button>save</button>
           </div>
         </div>
-        {state.positions.map(pos => <Position props={pos}/>)}
+        {state.positions.map((pos, i) => <Position props={pos} key={i}/>)}
       </div>
       <div className="preview-panel">
         <div className="buttons"><button>Download PDF</button></div>

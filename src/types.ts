@@ -1,7 +1,8 @@
 export interface Bullet {
+    key: React.Key;
     selected: boolean;
     text: string;
-    tags: string[]
+    tags: string[];
 }
 
 export interface Position {
